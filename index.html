@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Conceptual y Mental - Física</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: #f0f4f8;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        /* ==================== MAPA CONCEPTUAL ==================== */
+        .mapa-conceptual-container {
+            max-width: 1200px;
+            margin: 0 auto 100px auto;
+            position: relative;
+        }
+        
+        .titulo-mapa {
+            text-align: center;
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 50px;
+            font-weight: 800;
+            background: #a8e6cf;
+            padding: 15px;
+            border-radius: 15px;
+            border: 3px solid #2c3e50;
+            box-shadow: 4px 4px 0 #2c3e50;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .concept-map {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+        
+        .level {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .node-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        
+        .node {
+            background: white;
+            border: 3px solid #2c3e50;
+            border-radius: 20px;
+            padding: 15px 30px;
+            text-align: center;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 3px 3px 0 #2c3e50;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .node:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0 #2c3e50;
+        }
+        
+        .root-node {
+            background: #ffd3b6;
+            font-size: 1.3rem;
+            padding: 20px 40px;
+            border-radius: 50px;
+            margin-bottom: 40px;
+        }
+        
+        .category-node {
+            background: #dcedc1;
+            font-size: 1.1rem;
+            min-width: 200px;
+        }
+        
+        .sub-node {
+            background: #aed9e0;
+            font-size: 0.95rem;
+            border-width: 2px;
+            min-width: 180px;
+        }
+        
+        .detail-node {
+            background: #f8b195;
+            font-size: 0.85rem;
+            border-width: 2px;
+            box-shadow: 2px 2px 0 #2c3e50;
+            min-width: 150px;
+        }
+        
+        .connector-down {
+            width: 3px;
+            height: 40px;
+            background: #2c3e50;
+            margin: 0 auto;
+        }
+        
+        .two-columns {
+            display: flex;
+            gap: 80px;
+            justify-content: center;
+            width: 100%;
+            margin-top: 40px;
+        }
+        
+        .column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .sub-items {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            position: relative;
+            padding-top: 20px;
+        }
+        
+        /* ==================== MAPA MENTAL ==================== */
+        .mapa-mental-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            background: #fdfcf8;
+            background-image: radial-gradient(#e5e5e5 1px, transparent 1px);
+            background-size: 25px 25px;
+            padding: 40px;
+            border-radius: 20px;
+            border: 3px solid #2c3e50;
+        }
+        
+        .center-node-mental {
+            width: 320px;
+            height: 160px;
+            background: white;
+            border: 3px solid #2c3e50;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .center-node-mental:hover {
+            transform: scale(1.02);
+        }
+        
+        .center-node-mental h1 {
+            text-align: center;
+            font-size: 1.4rem;
+            color: #2c3e50;
+            font-weight: 800;
+            line-height: 1.3;
+            text-transform: uppercase;
+        }
+        
+        .badge-mental {
+            background: #ff6b6b;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            font-weight: 700;
+        }
+        
+        .branches-wrapper-mental {
+            position: relative;
+            margin-top: 80px;
+            height: 500px;
+        }
+        
+        .branches-container-mental {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 80px;
+            position: relative;
+        }
+        
+        .branch-mental {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        
+        .connector-left-mental,
+        .connector-right-mental {
+            position: absolute;
+            top: -80px;
+            height: 3px;
+            background: #2c3e50;
+            width: calc(50% - 200px);
+        }
+        
+        .connector-left-mental {
+            right: 50%;
+            margin-right: 160px;
+        }
+        
+        .connector-right-mental {
+            left: 50%;
+            margin-left: 160px;
+        }
+        
+        .vertical-left-mental,
+        .vertical-right-mental {
+            position: absolute;
+            top: -80px;
+            width: 3px;
+            height: 80px;
+            background: #2c3e50;
+        }
+        
+        .vertical-left-mental {
+            right: calc(50% + 160px);
+        }
+        
+        .vertical-right-mental {
+            left: calc(50% + 160px);
+        }
+        
+        .branch-bottom-mental {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .connector-bottom-v-mental {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 80px;
+            background: #2c3e50;
+        }
+        
+        .connector-bottom-h-mental {
+            position: absolute;
+            bottom: calc(100% + 80px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100px;
+            background: #2c3e50;
+        }
+        
+        .main-box-mental {
+            padding: 15px 35px;
+            border: 3px solid #2c3e50;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 240px;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .main-box-mental:hover {
+            transform: translateY(-3px);
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.15);
+        }
+        
+        .clasica-box { background: #c8f5e8; }
+        .moderna-box { background: #fff9c4; }
+        .contemporanea-box { background: #e1d5f7; }
+        
+        .sub-list-mental {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+            padding-top: 20px;
+        }
+        
+        .sub-list-mental::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 3px;
+            height: 20px;
+            background: #2c3e50;
+            transform: translateX(-50%);
+        }
+        
+        .item-mental {
+            background: white;
+            border: 2px solid #2c3e50;
+            border-radius: 25px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 220px;
+            position: relative;
+        }
+        
+        .item-mental:hover {
+            background: #f8f9fa;
+            transform: scale(1.05);
+        }
+        
+        .item-mental::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 12px;
+            height: 2px;
+            background: #2c3e50;
+        }
+        
+        .left-branch-mental .item-mental::after {
+            right: -12px;
+        }
+        
+        .branch-mental:not(.left-branch-mental) .item-mental::after {
+            left: -12px;
+        }
+        
+        .icon-mental {
+            font-size: 1.2rem;
+        }
+        
+        /* ==================== MODAL COMPARTIDO ==================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .info-panel {
+            background: white;
+            border: 4px solid #2c3e50;
+            border-radius: 20px;
+            padding: 35px;
+            max-width: 550px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s;
+        }
+        
+        @keyframes slideUp {
+            from { 
+                transform: translateY(60px); 
+                opacity: 0; 
+            }
+            to { 
+                transform: translateY(0); 
+                opacity: 1; 
+            }
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: transform 0.2s;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+        }
+        
+        .close-btn:hover {
+            transform: rotate(90deg) scale(1.1);
+        }
+        
+        .info-panel h2 {
+            font-size: 1.9rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-right: 40px;
+            border-bottom: 3px solid #eee;
+            padding-bottom: 12px;
+            font-weight: 800;
+        }
+        
+        .category-tag {
+            display: inline-block;
+            background: #ffd3b6;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            border: 2px solid #2c3e50;
+            color: #2c3e50;
+        }
+        
+        .info-panel p {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: #444;
+        }
+        
+        .info-panel ul {
+            margin-top: 15px;
+            margin-left: 25px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+        }
+        
+        .info-panel li {
+            margin-bottom: 8px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 968px) {
+            .two-columns {
+                flex-direction: column;
+                gap: 40px;
+            }
+            
+            .branches-container-mental {
+                flex-direction: column;
+                gap: 60px;
+                align-items: center;
+            }
+            
+            .branches-wrapper-mental {
+                height: auto;
+            }
+            
+            .connector-left-mental,
+            .connector-right-mental,
+            .vertical-left-mental,
+            .vertical-right-mental,
+            .connector-bottom-v-mental,
+            .connector-bottom-h-mental {
+                display: none;
+            }
+            
+            .branch-bottom-mental {
+                position: relative;
+                left: auto;
+                transform: none;
+                margin-top: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== MAPA CONCEPTUAL ==================== -->
+    <div class="mapa-conceptual-container">
+        <h1 class="titulo-mapa">MAPA CONCEPTUAL: LA FÍSICA</h1>
+        
+        <div class="concept-map">
+            <!-- Nivel 0: Raíz -->
+            <div class="node root-node" onclick="showInfo('fisica')">
+                LA FÍSICA<br>
+                <small style="font-size: 0.85rem; font-weight: 600;">Ciencia de los fenómenos naturales</small>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div class="connector-down"></div>
+                
+                <!-- Nivel 1: 4 ramas principales -->
+                <div style="margin-top: 0; position: relative; height: 40px; width: 80%;">
+                    <div style="position: absolute; top: 0; left: 12.5%; width: 3px; height: 40px; background: #2c3e50;"></div>
+                    <div style="position: absolute; top: 0; left: 37.5%; width: 3px; height: 40px; background: #2c3e50;"></div>
+                    <div style="position: absolute; top: 0; left: 62.5%; width: 3px; height: 40px; background: #2c3e50;"></div>
+                    <div style="position: absolute; top: 0; left: 87.5%; width: 3px; height: 40px; background: #2c3e50;"></div>
+                    <div style="position: absolute; top: 0; left: 12.5%; right: 12.5%; height: 3px; background: #2c3e50;"></div>
+                </div>
+                
+                <div class="level" style="margin-top: 0; gap: 30px; flex-wrap: wrap;">
+                    <!-- Rama 1: Definición -->
+                    <div class="node-wrapper">
+                        <div class="node category-node" onclick="showInfo('definicion')" style="background: #ffaaa5;">
+                            DEFINICIÓN
+                        </div>
+                        <div class="connector-down" style="height: 30px;"></div>
+                        <div class="sub-items" style="flex-direction: column; gap: 10px;">
+                            <div class="node sub-node" onclick="showInfo('materia')" style="min-width: 160px;">Materia</div>
+                            <div class="node sub-node" onclick="showInfo('energia')" style="min-width: 160px;">Energía</div>
+                            <div class="node sub-node" onclick="showInfo('interacciones')" style="min-width: 160px;">Interacciones</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Rama 2: Magnitudes -->
+                    <div class="node-wrapper">
+                        <div class="node category-node" onclick="showInfo('magnitudes')" style="background: #a8d8ea;">
+                            MAGNITUDES<br>FÍSICAS
+                        </div>
+                        <div class="connector-down" style="height: 30px;"></div>
+                        <div class="two-columns" style="margin-top: 0; gap: 20px;">
+                            <div class="column">
+                                <div class="node sub-node" onclick="showInfo('origen')" style="background: #b8e6b8; margin-bottom: 15px;">Por Origen</div>
+                                <div style="display: flex; flex-direction: column; gap: 8px; position: relative; padding-top: 15px;">
+                                    <div style="position: absolute; top: 0; left: 50%; width: 3px; height: 15px; background: #2c3e50;"></div>
+                                    <div class="node detail-node" onclick="showInfo('fundamentales')">Fundamentales</div>
+                                    <div class="node detail-node" onclick="showInfo('derivadas')">Derivadas</div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="node sub-node" onclick="showInfo('naturaleza')" style="background: #d1c4e9; margin-bottom: 15px;">Por Naturaleza</div>
+                                <div style="display: flex; flex-direction: column; gap: 8px; position: relative; padding-top: 15px;">
+                                    <div style="position: absolute; top: 0; left: 50%; width: 3px; height: 15px; background: #2c3e50;"></div>
+                                    <div class="node detail-node" onclick="showInfo('escalares')">Escalares</div>
+                                    <div class="node detail-node" onclick="showInfo('vectoriales')">Vectoriales</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Rama 3: Sistemas de Unidades -->
+                    <div class="node-wrapper">
+                        <div class="node category-node" onclick="showInfo('sistemas')" style="background: #fff9c4;">
+                            SISTEMAS DE<br>UNIDADES
+                        </div>
+                        <div class="connector-down" style="height: 30px;"></div>
+                        <div class="sub-items" style="flex-direction: column; gap: 10px;">
+                            <div class="node sub-node" onclick="showInfo('si')">SI (Internacional)</div>
+                            <div class="node sub-node" onclick="showInfo('cgs')">CGS</div>
+                            <div class="node sub-node" onclick="showInfo('ingles')">Sistema Inglés</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Rama 4: Notación -->
+                    <div class="node-wrapper">
+                        <div class="node category-node" onclick="showInfo('notacion')" style="background: #f8b195;">
+                            NOTACIÓN<br>CIENTÍFICA
+                        </div>
+                        <div class="connector-down" style="height: 30px;"></div>
+                        <div class="sub-items" style="flex-direction: column; gap: 10px;">
+                            <div class="node sub-node" onclick="showInfo('prefijos')">Prefijos</div>
+                            <div class="node sub-node" onclick="showInfo('conversion')">Conversión</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MAPA MENTAL ==================== -->
+    <div class="mapa-mental-container">
+        <div class="center-node-mental" onclick="showInfo2('general')">
+            <h1>CLASIFICACIÓN<br>DE LAS<br>CIENCIAS FÍSICAS</h1>
+            <div class="badge-mental">3 Grandes Ramas</div>
+        </div>
+        
+        <div class="branches-wrapper-mental">
+            <div class="connector-left-mental"></div>
+            <div class="connector-right-mental"></div>
+            <div class="vertical-left-mental"></div>
+            <div class="vertical-right-mental"></div>
+            <div class="connector-bottom-h-mental"></div>
+            
+            <div class="branches-container-mental">
+                <!-- Rama Izquierda: Física Clásica -->
+                <div class="branch-mental left-branch-mental">
+                    <div class="main-box-mental clasica-box" onclick="showInfo2('clasica')">
+                        <span class="icon-mental">🏛️</span>
+                        <span>FÍSICA CLÁSICA</span>
+                    </div>
+                    <div class="sub-list-mental">
+                        <div class="item-mental" onclick="showInfo2('mecanica')">
+                            <span class="icon-mental">⚙️</span>
+                            <span>Mecánica</span>
+                        </div>
+                        <div class="item-mental" onclick="showInfo2('termo')">
+                            <span class="icon-mental">🌡️</span>
+                            <span>Termodinámica</span>
+                        </div>
+                        <div class="item-mental" onclick="showInfo2('ondas')">
+                            <span class="icon-mental">〰️</span>
+                            <span>Mecánica Ondulatoria</span>
+                        </div>
+                        <div class="item-mental" onclick="showInfo2('optica')">
+                            <span class="icon-mental">🔍</span>
+                            <span>Óptica</span>
+                        </div>
+                        <div class="item-mental" onclick="showInfo2('electromag')">
+                            <span class="icon-mental">⚡</span>
+                            <span>Electromagnetismo</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Rama Derecha: Física Moderna -->
+                <div class="branch-mental">
+                    <div class="main-box-mental moderna-box" onclick="showInfo2('moderna')">
+                        <span class="icon-mental">⚛️</span>
+                        <span>FÍSICA MODERNA</span>
+                    </div>
+                    <div class="sub-list-mental">
+                        <div class="item-mental" onclick="showInfo2('relatividad')">
+                            <span class="icon-mental">🌌</span>
+                            <span>Relatividad</span>
+                        </div>
+                        <div class="item-mental" onclick="showInfo2('cuantica')">
+                            <span class="icon-mental">🔬</span>
+                            <span>Mecánica Cuántica</span>
+                        </div>
+                        <div class="item-mental" onclick="showInfo2('particulas')">
+                            <span class="icon-mental">⚡</span>
+                            <span>Física de Partículas</span>
+                        </div>
+                        <div class="item-mental" onclick="showInfo2('gravitacion')">
+                            <span class="icon-mental">🌍</span>
+                            <span>Gravitación</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Rama Inferior: Física Contemporánea -->
+            <div class="branch-bottom-mental">
+                <div class="connector-bottom-v-mental"></div>
+                <div class="main-box-mental contemporanea-box" onclick="showInfo2('contemporanea')">
+                    <span class="icon-mental">🔮</span>
+                    <span>FÍSICA CONTEMPORÁNEA</span>
+                </div>
+                <div class="sub-list-mental" style="flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 15px; max-width: 700px; margin-top: 20px;">
+                    <div class="item-mental" onclick="showInfo2('noflineal')" style="min-width: 200px;">
+                        <span class="icon-mental">📊</span>
+                        <span>Dinámica No-lineal</span>
+                    </div>
+                    <div class="item-mental" onclick="showInfo2('sistemas')" style="min-width: 200px;">
+                        <span class="icon-mental">🕸️</span>
+                        <span>Sistemas Complejos</span>
+                    </div>
+                    <div class="item-mental" onclick="showInfo2('nano')" style="min-width: 160px;">
+                        <span class="icon-mental">🔹</span>
+                        <span>Nano-Física</span>
+                    </div>
+                    <div class="item-mental" onclick="showInfo2('mesoscopica')" style="min-width: 180px;">
+                        <span class="icon-mental">⚗️</span>
+                        <span>Fís. Mesoscópica</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ==================== MODAL ==================== -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeInfo(event)">
+        <div class="info-panel" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeInfo()">×</button>
+            <div class="category-tag" id="infoCategory">Categoría</div>
+            <h2 id="infoTitle">Título</h2>
+            <div id="infoContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Datos del Mapa Conceptual
+        const infoData = {
+            fisica: {
+                category: "Concepto General",
+                title: "La Física",
+                content: "<p>Ciencia natural que estudia las propiedades de la materia, la energía, el espacio, el tiempo y las interacciones entre ellos. Busca describir los fenómenos naturales mediante leyes matemáticas.</p><ul><li>Se divide en Clásica, Moderna y Contemporánea</li><li>Basada en la observación y experimentación</li><li>Utiliza el método científico</li></ul>"
+            },
+            definicion: {
+                category: "Definición",
+                title: "¿Qué estudia la Física?",
+                content: "<p>Analiza los fenómenos naturales y materiales fundamentales del universo:</p><ul><li>Propiedades de la materia y cambios de estado</li><li>Diferentes formas de energía y sus transformaciones</li><li>Movimiento y causas que lo producen</li><li>Interacciones fundamentales del universo</li></ul>"
+            },
+            materia: {
+                category: "Definición",
+                title: "Materia",
+                content: "<p>Todo lo que ocupa espacio y posee masa. La física estudia sus propiedades físicas (masa, volumen, densidad) y químicas, así como sus estados: sólido, líquido, gaseoso y plasma.</p>"
+            },
+            energia: {
+                category: "Definición",
+                title: "Energía",
+                content: "<p>Capacidad de realizar trabajo o transferir calor. Se manifiesta en diversas formas:</p><ul><li><strong>Cinética:</strong> Por el movimiento</li><li><strong>Potencial:</strong> Por posición o estado</li><li><strong>Térmica, eléctrica, nuclear, etc.</strong></li></ul>"
+            },
+            interacciones: {
+                category: "Definición",
+                title: "Interacciones Fundamentales",
+                content: "<p>Las cuatro fuerzas básicas que gobiernan el universo:</p><ul><li><strong>Gravitacional:</strong> Atracción entre masas</li><li><strong>Electromagnética:</strong> Entre cargas eléctricas</li><li><strong>Nuclear Fuerte:</strong> Mantiene unidos los núcleos atómicos</li><li><strong>Nuclear Débil:</strong> Responsable de la radioactividad</li></ul>"
+            },
+            magnitudes: {
+                category: "Magnitudes Físicas",
+                title: "Magnitudes Físicas",
+                content: "<p>Toda propiedad de los cuerpos o sistemas que puede medirse cuantitativamente. Toda magnitud debe expresarse con un <strong>valor numérico</strong> y una <strong>unidad de medida</strong>.</p><p>Ejemplo: 10 metros, 5 segundos, 20 kg.</p>"
+            },
+            origen: {
+                category: "Magnitudes",
+                title: "Clasificación por Origen",
+                content: "<p>Según cómo se definen dentro del sistema de unidades:</p>"
+            },
+            fundamentales: {
+                category: "Magnitudes",
+                title: "Magnitudes Fundamentales",
+                content: "<p>Son independientes y sirven de base para las demás. En el Sistema Internacional (SI) son 7:</p><ul><li>Longitud (metro, m)</li><li>Masa (kilogramo, kg)</li><li>Tiempo (segundo, s)</li><li>Temperatura (Kelvin, K)</li><li>Intensidad de corriente (Amperio, A)</li><li>Intensidad luminosa (candela, cd)</li><li>Cantidad de sustancia (mol)</li></ul>"
+            },
+            derivadas: {
+                category: "Magnitudes",
+                title: "Magnitudes Derivadas",
+                content: "<p>Se definen en función de las fundamentales mediante ecuaciones físicas:</p><ul><li><strong>Velocidad:</strong> m/s (longitud/tiempo)</li><li><strong>Fuerza (Newton):</strong> kg·m/s²</li><li><strong>Energía (Joule):</strong> kg·m²/s²</li><li><strong>Presión (Pascal):</strong> N/m²</li></ul>"
+            },
+            naturaleza: {
+                category: "Magnitudes",
+                title: "Clasificación por Naturaleza",
+                content: "<p>Según las características matemáticas necesarias para su descripción completa:</p>"
+            },
+            escalares: {
+                category: "Magnitudes",
+                title: "Magnitudes Escalares",
+                content: "<p>Quedan completamente definidas por un <strong>número y una unidad</strong>. No tienen dirección en el espacio.</p><ul><li>Ejemplos: Temperatura, masa, tiempo, densidad, energía, volumen.</li><li>Se suman algebraicamente: 5kg + 3kg = 8kg</li></ul>"
+            },
+            vectoriales: {
+                category: "Magnitudes",
+                title: "Magnitudes Vectoriales",
+                content: "<p>Requieren <strong>magnitud, dirección y sentido</strong> para quedar definidas. Se representan con vectores (flechas).</p><ul><li>Ejemplos: Velocidad, fuerza, aceleración, campo eléctrico.</li><li>Tienen punto de aplicación específico</li><li>Se suman considerando su dirección (regla del paralelogramo)</li></ul>"
+            },
+            sistemas: {
+                category: "Sistemas de Unidades",
+                title: "Sistemas de Unidades",
+                content: "<p>Conjunto de unidades básicas y derivadas utilizadas para medir magnitudes físicas. Permiten estandarizar mediciones científicas y técnicas.</p>"
+            },
+            si: {
+                category: "Sistemas",
+                title: "Sistema Internacional (SI)",
+                content: "<p>Sistema universal adoptado por la ciencia y la mayoría de países. Utiliza:</p><ul><li>Unidades fundamentales: metro, kilogramo, segundo, etc.</li><li>Prefijos decimales: kilo (10³), centi (10⁻²), mili (10⁻³), micro (10⁻⁶), nano (10⁻⁹)</li></ul>"
+            },
+            cgs: {
+                category: "Sistemas",
+                title: "Sistema CGS",
+                content: "<p>Sistema Centímetro-Gramo-Segundo. Usado en física teórica y química.</p><ul><li>Longitud: centímetro (cm)</li><li>Masa: gramo (g)</li><li>Tiempo: segundo (s)</li><li>Fuerza: dina (dyn)</li></ul>"
+            },
+            ingles: {
+                category: "Sistemas",
+                title: "Sistema Inglés",
+                content: "<p>Usado principalmente en Estados Unidos y Reino Unido. Unidades principales:</p><ul><li>Longitud: pie (ft), pulgada (in), yarda</li><li>Masa: libra (lb), slug</li><li>Fuerza: libra-fuerza (lbf)</li><li>Temperatura: Fahrenheit (°F)</li></ul>"
+            },
+            notacion: {
+                category: "Notación Científica",
+                title: "Notación Científica",
+                content: "<p>Forma de expresar números muy grandes o muy pequeños de manera simplificada, usando potencias de base 10:</p><ul><li>Formato: <strong>M × 10ⁿ</strong></li><li>M es un número entre 1 y 9.99...</li><li>n es un número entero (positivo o negativo)</li></ul><p>Ejemplo: 300,000,000 m/s = 3 × 10⁸ m/s (velocidad de la luz)</p>"
+            },
+            prefijos: {
+                category: "Notación",
+                title: "Prefijos del SI",
+                content: "<p>Multiples y submúltiplos para simplificar cantidades:</p><ul><li><strong>Giga (G):</strong> 10⁹ (mil millones)</li><li><strong>Mega (M):</strong> 10⁶ (millón)</li><li><strong>Kilo (k):</strong> 10³ (mil)</li><li><strong>Centi (c):</strong> 10⁻² (centésima)</li><li><strong>Mili (m):</strong> 10⁻³ (milésima)</li><li><strong>Micro (µ):</strong> 10⁻⁶ (millonésima)</li><li><strong>Nano (n):</strong> 10⁻⁹ (mil millonésima)</li></ul>"
+            },
+            conversion: {
+                category: "Notación",
+                title: "Conversión de Unidades",
+                content: "<p>Proceso para cambiar una magnitud de una unidad a otra utilizando <strong>factores de conversión</strong>.</p><p>Ejemplo: Convertir 5 km a metros:</p><p>5 km × (1000 m / 1 km) = 5000 m</p>"
+            }
+        };
+
+        // Datos del Mapa Mental
+        const data2 = {
+            general: {
+                category: "General",
+                title: "Clasificación de las Ciencias Físicas",
+                text: "La física se divide históricamente en tres grandes períodos o ramas: la Física Clásica (desarrollada antes del siglo XX), la Física Moderna (inicios del siglo XX con Einstein y la mecánica cuántica) y la Física Contemporánea (líneas de investigación actuales)."
+            },
+            clasica: {
+                category: "Física Clásica",
+                title: "Física Clásica",
+                text: "Desarrollada principalmente antes del siglo XX. Estudia objetos cotidianos que se mueven a velocidades mucho menores que la luz. Incluye mecánica newtoniana, termodinámica, óptica y electromagnetismo. Sus leyes son válidas para el mundo macroscópico y cotidiano."
+            },
+            mecanica: {
+                category: "Física Clásica",
+                title: "Mecánica",
+                text: "Rama que estudia el movimiento y las fuerzas. Se subdivide en: Estática (cuerpos en equilibrio), Cinemática (descripción geométrica del movimiento) y Dinámica (relación entre fuerzas y movimiento)."
+            },
+            termo: {
+                category: "Física Clásica",
+                title: "Termodinámica",
+                text: "Ciencia que estudia los fenómenos térmicos, el calor, la temperatura y las leyes que gobiernan la transferencia de energía térmica y la conversión entre calor y trabajo."
+            },
+            ondas: {
+                category: "Física Clásica",
+                title: "Mecánica Ondulatoria",
+                text: "Estudio de las ondas mecánicas: su producción, propagación, absorción y propiedades como la interferencia, difracción y reflexión. Aplica al sonido y vibraciones."
+            },
+            optica: {
+                category: "Física Clásica",
+                title: "Óptica",
+                text: "Estudio de la luz y su comportamiento. Incluye óptica geométrica (rayos y lentes) y física (naturaleza ondulatoria). Trata la reflexión, refracción y formación de imágenes."
+            },
+            electromag: {
+                category: "Física Clásica",
+                title: "Electromagnetismo",
+                text: "Estudio de las cargas eléctricas en reposo y movimiento, campos magnéticos, inducción electromagnética y ondas electromagnéticas. Unifica electricidad y magnetismo."
+            },
+            moderna: {
+                category: "Física Moderna",
+                title: "Física Moderna",
+                text: "Revolución científica de inicios del siglo XX (1900-1930). Surge para explicar fenómenos a velocidades cercanas a la luz y escalas atómicas. Basada en la teoría de la relatividad y la mecánica cuántica."
+            },
+            relatividad: {
+                category: "Física Moderna",
+                title: "Relatividad",
+                text: "Teoría de Einstein (1905 y 1915). Especial: espacio-tiempo y constancia de la velocidad de la luz. General: gravedad como curvatura del espacio-tiempo por la masa."
+            },
+            cuantica: {
+                category: "Física Moderna",
+                title: "Mecánica Cuántica",
+                text: "Estudio del comportamiento de partículas a escala atómica y subatómica. Incluye el principio de incertidumbre, dualidad onda-partícula y cuantización de la energía."
+            },
+            particulas: {
+                category: "Física Moderna",
+                title: "Física de Partículas",
+                text: "Estudio de las partículas elementales (quarks, leptones, bosones) y las interacciones fundamentales que componen toda la materia del universo."
+            },
+            gravitacion: {
+                category: "Física Moderna",
+                title: "Gravitación",
+                text: "Revisión de la gravedad newtoniana desde la relatividad general. Incluye agujeros negros, ondas gravitacionales y cosmología."
+            },
+            contemporanea: {
+                category: "Física Contemporánea",
+                title: "Física Contemporánea",
+                text: "Áreas de investigación actual que estudian fenómenos entre lo microscópico y macroscópico, sistemas complejos y nuevos estados de la materia."
+            },
+            noflineal: {
+                category: "Física Contemporánea",
+                title: "Dinámica No-lineal",
+                text: "Estudio de sistemas donde la respuesta no es proporcional al estímulo. Incluye la teoría del caos, fractales y comportamientos impredecibles sensibles a condiciones iniciales."
+            },
+            sistemas: {
+                category: "Física Contemporánea",
+                title: "Sistemas Complejos",
+                text: "Análisis de redes interconectadas donde emergen propiedades globales que no se deducen de las partes individuales (emergencia)."
+            },
+            nano: {
+                category: "Física Contemporánea",
+                title: "Nano-Física",
+                text: "Estudio de fenómenos físicos a escala nanométrica (1-100 nm), donde los efectos cuánticos son significativos. Base de la nanotecnología."
+            },
+            mesoscopica: {
+                category: "Física Contemporánea",
+                title: "Física Mesoscópica",
+                text: "Estudia sistemas de tamaño intermedio entre el microscópico y macroscópico, donde coexisten efectos cuánticos y clásicos."
+            }
+        };
+        
+        function showInfo(key) {
+            const overlay = document.getElementById('modalOverlay');
+            const data = infoData[key];
+            
+            document.getElementById('infoCategory').textContent = data.category;
+            document.getElementById('infoTitle').textContent = data.title;
+            document.getElementById('infoContent').innerHTML = data.content;
+            document.getElementById('infoCategory').style.background = "#ffd3b6";
+            
+            overlay.classList.add('active');
+        }
+        
+        function showInfo2(key) {
+            const overlay = document.getElementById('modalOverlay');
+            const data = data2[key];
+            
+            document.getElementById('infoCategory').textContent = data.category;
+            document.getElementById('infoTitle').textContent = data.title;
+            document.getElementById('infoContent').innerHTML = "<p>" + data.text + "</p>";
+            
+            const tag = document.getElementById('infoCategory');
+            if (data.category === "Física Clásica") {
+                tag.style.background = "#c8f5e8";
+            } else if (data.category === "Física Moderna") {
+                tag.style.background = "#fff9c4";
+            } else if (data.category === "Física Contemporánea") {
+                tag.style.background = "#e1d5f7";
+            } else {
+                tag.style.background = "#a8e6cf";
+            }
+            
+            overlay.classList.add('active');
+        }
+        
+        function closeInfo(e) {
+            if (!e || e.target.id === 'modalOverlay' || e.target.tagName === 'BUTTON') {
+                document.getElementById('modalOverlay').classList.remove('active');
+            }
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeInfo();
+            }
+        });
+    </script>
+</body>
+</html>
